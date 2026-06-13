@@ -59,16 +59,16 @@ SYSTEM_INSTRUCTION = (
 # ── Ensure DB tables exist on every cold start (Vercel-safe) ────────────────
 try:
     create_tables()
-    print("✅  Database tables ready")
+    print("[OK] Database tables ready")
 except Exception as _db_err:
-    print(f"⚠️  DB init warning: {_db_err}")
+    print(f"[WARNING] DB init warning: {_db_err}")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Tables are already created at import time above.
     # This lifespan is kept for local dev logging.
-    print("✅  GeminiChat API is live")
+    print("[OK] GeminiChat API is live")
     yield
 
 
