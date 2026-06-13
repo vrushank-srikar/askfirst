@@ -40,7 +40,7 @@ load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env")
 # ─── Gemini Setup ────────────────────────────────────────────────────────────
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL   = "gemini-2.0-flash"
+GEMINI_MODEL   = "gemini-2.5-flash"
 MEMORY_LIMIT   = 50   # max messages from other threads used as memory context
 
 client = genai.Client(api_key=GEMINI_API_KEY)
