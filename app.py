@@ -9,8 +9,13 @@ import requests
 import os
 
 # API_BASE is overridden via env var / Streamlit secrets in production
-# Set API_BASE = https://your-app.vercel.app in Streamlit Cloud secrets
-API_BASE = os.getenv("API_BASE", "http://localhost:8000").rstrip("/")
+# Set API_BASE = "https://your-app.vercel.app" in Streamlit Cloud secrets
+API_BASE = "http://localhost:8000"
+if "API_BASE" in st.secrets:
+    API_BASE = st.secrets["API_BASE"]
+elif os.getenv("API_BASE"):
+    API_BASE = os.getenv("API_BASE")
+API_BASE = API_BASE.rstrip("/")
 
 # ─── Page Config (must be first Streamlit call) ──────────────────────────────
 st.set_page_config(
@@ -295,7 +300,7 @@ with st.sidebar:
 
     # ── Backend Status ──
     if not backend_alive():
-        st.markdown("""
+        st.markdown(f"""
         <div style="
             margin: 0 0.75rem 0.75rem;
             padding: 0.65rem 0.9rem;
@@ -306,7 +311,7 @@ with st.sidebar:
             line-height: 1.5;
         ">
             ⚠️ <strong>Backend offline</strong><br>
-            <span style="color:#6b7280;">Run: <code style="color:#fbbf24;">uvicorn main:app --reload</code></span>
+            <span style="color:#6b7280;">Target URL:<br><code style="color:#fbbf24; word-break: break-all;">{API_BASE}</code></span>
         </div>
         """, unsafe_allow_html=True)
 
