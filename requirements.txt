@@ -1,0 +1,18 @@
+# ── Core API ──────────────────────────────────────────────────────────────────
+fastapi
+uvicorn[standard]
+
+# ── Streamlit UI ──────────────────────────────────────────────────────────────
+streamlit
+
+# ── Database ──────────────────────────────────────────────────────────────────
+sqlalchemy
+pymysql
+cryptography          # required by pymysql for caching_sha2_password auth
+
+# ── Gemini AI ─────────────────────────────────────────────────────────────────
+google-genai
+
+# ── Utilities ─────────────────────────────────────────────────────────────────
+python-dotenv
+requests
