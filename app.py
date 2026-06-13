@@ -422,63 +422,69 @@ with st.sidebar:
 # ─── MAIN AREA ───────────────────────────────────────────────────────────────
 
 if st.session_state.active_thread_id is None:
-    # ── Welcome / Empty State ──
-    # NOTE: No <style> tags here — Streamlit Cloud strips them.
-    # Animations are defined in the global CSS block above.
-    st.markdown("""
-    <div style="
-        display:flex; flex-direction:column;
-        align-items:center; justify-content:center;
-        min-height:78vh; text-align:center; padding:2rem;
-        animation: fadeIn 0.6s ease;
-    ">
-        <div style="
-            width:90px; height:90px; border-radius:50%;
-            background:linear-gradient(135deg,#667eea 0%,#764ba2 60%,#38ef7d 100%);
-            display:flex; align-items:center; justify-content:center;
-            font-size:2.4rem; margin-bottom:1.75rem;
-            animation: glow 3s ease-in-out infinite;
-        ">✦</div>
+    # ── Welcome / Empty State — native Streamlit (no unsafe HTML) ──
+    st.markdown("<div style='height:4rem'></div>", unsafe_allow_html=True)
 
-        <div style="
-            font-size:2rem; font-weight:800; margin:0 0 0.6rem;
-            color:#a5b4fc; letter-spacing:-0.5px;
-        ">Welcome to GeminiChat</div>
+    # Centred orb using columns
+    c1, c2, c3 = st.columns([1, 2, 1])
+    with c2:
+        st.markdown(
+            "<div style='"
+            "width:90px;height:90px;border-radius:50%;"
+            "background:linear-gradient(135deg,#667eea,#764ba2,#38ef7d);"
+            "display:flex;align-items:center;justify-content:center;"
+            "font-size:2.2rem;margin:0 auto 1.5rem;"
+            "box-shadow:0 0 40px rgba(102,126,234,0.6);"
+            "'>✦</div>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<div style='text-align:center;font-size:1.9rem;font-weight:800;"
+            "color:#a5b4fc;letter-spacing:-0.4px;margin-bottom:0.5rem;'>"
+            "Welcome to GeminiChat</div>",
+            unsafe_allow_html=True,
+        )
+        st.markdown(
+            "<div style='text-align:center;color:#4a5568;font-size:0.92rem;"
+            "line-height:1.7;margin-bottom:2rem;'>"
+            "Your AI assistant with <strong style='color:#818cf8;'>universal memory</strong>.<br>"
+            "Every conversation — across every thread — is remembered forever."
+            "</div>",
+            unsafe_allow_html=True,
+        )
 
-        <p style="
-            color:#4a5568; max-width:420px; line-height:1.75;
-            font-size:0.95rem; margin-bottom:2.5rem;
-        ">
-            Your AI assistant with <strong style="color:#818cf8;">universal memory</strong>.
-            Every conversation across every thread is remembered forever.
-        </p>
+    # Feature cards using native columns
+    st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
+    fc1, fc2, fc3, fc4 = st.columns(4)
+    card_style = (
+        "background:#0f1220;border:1px solid #1e2540;border-radius:16px;"
+        "padding:1.1rem 1rem;text-align:center;"
+    )
+    for col, icon, title, desc in [
+        (fc1, "💬", "Multi-Thread",     "Separate topics, one AI"),
+        (fc2, "🧠", "Universal Memory", "Remembers all past chats"),
+        (fc3, "⚡", "Gemini 2.0 Flash", "Fast & powerful"),
+        (fc4, "🗄️", "MySQL Backed",    "Persistent storage"),
+    ]:
+        with col:
+            st.markdown(
+                f"<div style='{card_style}'>"
+                f"<div style='font-size:1.5rem;margin-bottom:0.4rem;'>{icon}</div>"
+                f"<div style='color:#a5b4fc;font-weight:600;font-size:0.82rem;"
+                f"margin-bottom:0.2rem;'>{title}</div>"
+                f"<div style='color:#374151;font-size:0.72rem;'>{desc}</div>"
+                f"</div>",
+                unsafe_allow_html=True,
+            )
 
-        <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-bottom:2.5rem;">
-            <div style="background:#0f1220;border:1px solid #1e2540;border-radius:16px;padding:1.25rem 1.5rem;min-width:140px;">
-                <div style="font-size:1.6rem;margin-bottom:0.5rem;">💬</div>
-                <div style="color:#a5b4fc;font-weight:600;font-size:0.85rem;">Multi-Thread</div>
-                <div style="color:#374151;font-size:0.75rem;margin-top:0.25rem;">Separate topics, one AI</div>
-            </div>
-            <div style="background:#0f1220;border:1px solid #1e2540;border-radius:16px;padding:1.25rem 1.5rem;min-width:140px;">
-                <div style="font-size:1.6rem;margin-bottom:0.5rem;">🧠</div>
-                <div style="color:#a5b4fc;font-weight:600;font-size:0.85rem;">Universal Memory</div>
-                <div style="color:#374151;font-size:0.75rem;margin-top:0.25rem;">Remembers all past chats</div>
-            </div>
-            <div style="background:#0f1220;border:1px solid #1e2540;border-radius:16px;padding:1.25rem 1.5rem;min-width:140px;">
-                <div style="font-size:1.6rem;margin-bottom:0.5rem;">⚡</div>
-                <div style="color:#a5b4fc;font-weight:600;font-size:0.85rem;">Gemini 2.0 Flash</div>
-                <div style="color:#374151;font-size:0.75rem;margin-top:0.25rem;">Fast, powerful responses</div>
-            </div>
-            <div style="background:#0f1220;border:1px solid #1e2540;border-radius:16px;padding:1.25rem 1.5rem;min-width:140px;">
-                <div style="font-size:1.6rem;margin-bottom:0.5rem;">🗄️</div>
-                <div style="color:#a5b4fc;font-weight:600;font-size:0.85rem;">MySQL Backed</div>
-                <div style="color:#374151;font-size:0.75rem;margin-top:0.25rem;">Persistent storage</div>
-            </div>
-        </div>
-
-        <div style="color:#2a3050;font-size:0.82rem;">← Create a thread from the sidebar to begin</div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("<div style='height:2rem'></div>", unsafe_allow_html=True)
+    c1, c2, c3 = st.columns([1, 2, 1])
+    with c2:
+        st.markdown(
+            "<div style='text-align:center;color:#2a3050;font-size:0.82rem;'>"
+            "← Create a thread from the sidebar to begin</div>",
+            unsafe_allow_html=True,
+        )
 
 else:
     # ── Active Thread View ──
