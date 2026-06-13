@@ -161,7 +161,16 @@ def _build_gemini_contents(memory_msgs: list, current_msgs: list) -> list:
 @app.get("/health", tags=["Utility"])
 def health_check():
     """Quick liveness probe."""
-    return {"status": "ok", "model": GEMINI_MODEL}
+    key_len = len(GEMINI_API_KEY)
+    key_prefix = GEMINI_API_KEY[:6] if GEMINI_API_KEY else "None"
+    key_suffix = GEMINI_API_KEY[-6:] if GEMINI_API_KEY else "None"
+    return {
+        "status": "ok",
+        "model": GEMINI_MODEL,
+        "key_len": key_len,
+        "key_prefix": key_prefix,
+        "key_suffix": key_suffix,
+    }
 
 
 # ── Threads ──────────────────────────────────────────────────────────────────
