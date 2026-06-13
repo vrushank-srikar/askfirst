@@ -13,6 +13,7 @@ Uses: google-genai SDK (google.genai)
 
 import os
 from contextlib import asynccontextmanager
+from typing import Optional
 
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -92,7 +93,7 @@ app.add_middleware(
 # ─── Pydantic Schemas ────────────────────────────────────────────────────────
 
 class ThreadCreateRequest(BaseModel):
-    title: str | None = None
+    title: Optional[str] = None
 
 
 class ChatRequest(BaseModel):
@@ -171,7 +172,7 @@ def list_threads(db: Session = Depends(get_db)):
 
 
 @app.post("/threads", status_code=201, tags=["Threads"])
-def create_thread(req: ThreadCreateRequest | None = None, db: Session = Depends(get_db)):
+def create_thread(req: Optional[ThreadCreateRequest] = None, db: Session = Depends(get_db)):
     """Create a new thread. Auto-generates title if not supplied."""
     count = len(db_get_threads(db)) + 1
     title = (req.title if req and req.title else None) or f"Thread #{count}"

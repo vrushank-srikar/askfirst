@@ -7,6 +7,7 @@ Tables:
 
 import os
 import pymysql
+from typing import Optional
 from datetime import datetime
 
 from sqlalchemy import (
@@ -109,11 +110,11 @@ def get_threads(db) -> list[Thread]:
     return db.query(Thread).order_by(Thread.created_at.desc()).all()
 
 
-def get_thread(db, thread_id: int) -> Thread | None:
+def get_thread(db, thread_id: int) -> Optional[Thread]:
     return db.query(Thread).filter(Thread.id == thread_id).first()
 
 
-def delete_thread_by_id(db, thread_id: int) -> Thread | None:
+def delete_thread_by_id(db, thread_id: int) -> Optional[Thread]:
     thread = get_thread(db, thread_id)
     if thread:
         db.delete(thread)
@@ -142,9 +143,9 @@ def get_messages(db, thread_id: int) -> list[Message]:
 
 def get_all_messages_for_memory(
     db,
-    exclude_thread_id: int | None = None,
+    exclude_thread_id: Optional[int] = None,
     limit: int = 50,
-) -> list[Message]:
+) -> list:
     """
     Fetch the most-recent `limit` messages from every thread except
     `exclude_thread_id`.  Used to build the universal-memory context
