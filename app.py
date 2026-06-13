@@ -177,6 +177,20 @@ hr {
     gap: 0.25rem !important;
     align-items: center !important;
 }
+
+/* ── Animations ── */
+@keyframes glow {
+    0%,100% { box-shadow: 0 0 0 12px rgba(102,126,234,0.08), 0 0 0 24px rgba(102,126,234,0.04), 0 12px 40px rgba(102,126,234,0.5); }
+    50%      { box-shadow: 0 0 0 16px rgba(102,126,234,0.12), 0 0 0 32px rgba(102,126,234,0.06), 0 12px 60px rgba(102,126,234,0.7); }
+}
+@keyframes fadeIn {
+    from { opacity:0; transform: translateY(16px); }
+    to   { opacity:1; transform: translateY(0); }
+}
+@keyframes pulse {
+    0%,100% { box-shadow: 0 8px 30px rgba(102,126,234,0.4); }
+    50%      { box-shadow: 0 8px 50px rgba(102,126,234,0.7); }
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -409,109 +423,61 @@ with st.sidebar:
 
 if st.session_state.active_thread_id is None:
     # ── Welcome / Empty State ──
+    # NOTE: No <style> tags here — Streamlit Cloud strips them.
+    # Animations are defined in the global CSS block above.
     st.markdown("""
     <div style="
-        display: flex; flex-direction: column;
-        align-items: center; justify-content: center;
-        min-height: 78vh; text-align: center; padding: 2rem;
+        display:flex; flex-direction:column;
+        align-items:center; justify-content:center;
+        min-height:78vh; text-align:center; padding:2rem;
         animation: fadeIn 0.6s ease;
     ">
-        <!-- Glowing orb -->
         <div style="
-            width: 90px; height: 90px; border-radius: 50%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 60%, #38ef7d 100%);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 2.4rem; margin-bottom: 1.75rem;
-            box-shadow:
-                0 0 0 12px rgba(102,126,234,0.08),
-                0 0 0 24px rgba(102,126,234,0.04),
-                0 12px 40px rgba(102,126,234,0.5);
+            width:90px; height:90px; border-radius:50%;
+            background:linear-gradient(135deg,#667eea 0%,#764ba2 60%,#38ef7d 100%);
+            display:flex; align-items:center; justify-content:center;
+            font-size:2.4rem; margin-bottom:1.75rem;
             animation: glow 3s ease-in-out infinite;
         ">✦</div>
 
-        <h1 style="
-            font-size: 2.1rem; font-weight: 800; margin: 0 0 0.6rem;
-            background: linear-gradient(135deg, #e2e8f0 0%, #a5b4fc 60%, #818cf8 100%);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        ">Welcome to GeminiChat</h1>
+        <div style="
+            font-size:2rem; font-weight:800; margin:0 0 0.6rem;
+            color:#a5b4fc; letter-spacing:-0.5px;
+        ">Welcome to GeminiChat</div>
 
         <p style="
-            color: #4a5568; max-width: 420px; line-height: 1.75;
-            font-size: 0.95rem; margin-bottom: 2.5rem;
+            color:#4a5568; max-width:420px; line-height:1.75;
+            font-size:0.95rem; margin-bottom:2.5rem;
         ">
             Your AI assistant with <strong style="color:#818cf8;">universal memory</strong>.
-            Every conversation — across every thread — is remembered forever.
+            Every conversation across every thread is remembered forever.
         </p>
 
-        <!-- Feature cards -->
         <div style="display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-bottom:2.5rem;">
-            <div style="
-                background:#0f1220; border:1px solid #1e2540;
-                border-radius:16px; padding:1.25rem 1.5rem; min-width:148px;
-                transition:all 0.3s;
-            ">
-                <div style="font-size:1.6rem; margin-bottom:0.5rem;">💬</div>
-                <div style="color:#a5b4fc; font-weight:600; font-size:0.85rem;">Multi-Thread</div>
-                <div style="color:#374151; font-size:0.75rem; margin-top:0.25rem; line-height:1.4;">
-                    Separate topics,<br>one AI
-                </div>
+            <div style="background:#0f1220;border:1px solid #1e2540;border-radius:16px;padding:1.25rem 1.5rem;min-width:140px;">
+                <div style="font-size:1.6rem;margin-bottom:0.5rem;">💬</div>
+                <div style="color:#a5b4fc;font-weight:600;font-size:0.85rem;">Multi-Thread</div>
+                <div style="color:#374151;font-size:0.75rem;margin-top:0.25rem;">Separate topics, one AI</div>
             </div>
-            <div style="
-                background:#0f1220; border:1px solid #1e2540;
-                border-radius:16px; padding:1.25rem 1.5rem; min-width:148px;
-            ">
-                <div style="font-size:1.6rem; margin-bottom:0.5rem;">🧠</div>
-                <div style="color:#a5b4fc; font-weight:600; font-size:0.85rem;">Universal Memory</div>
-                <div style="color:#374151; font-size:0.75rem; margin-top:0.25rem; line-height:1.4;">
-                    Remembers all<br>past chats
-                </div>
+            <div style="background:#0f1220;border:1px solid #1e2540;border-radius:16px;padding:1.25rem 1.5rem;min-width:140px;">
+                <div style="font-size:1.6rem;margin-bottom:0.5rem;">🧠</div>
+                <div style="color:#a5b4fc;font-weight:600;font-size:0.85rem;">Universal Memory</div>
+                <div style="color:#374151;font-size:0.75rem;margin-top:0.25rem;">Remembers all past chats</div>
             </div>
-            <div style="
-                background:#0f1220; border:1px solid #1e2540;
-                border-radius:16px; padding:1.25rem 1.5rem; min-width:148px;
-            ">
-                <div style="font-size:1.6rem; margin-bottom:0.5rem;">⚡</div>
-                <div style="color:#a5b4fc; font-weight:600; font-size:0.85rem;">Gemini Flash</div>
-                <div style="color:#374151; font-size:0.75rem; margin-top:0.25rem; line-height:1.4;">
-                    Fast, powerful<br>responses
-                </div>
+            <div style="background:#0f1220;border:1px solid #1e2540;border-radius:16px;padding:1.25rem 1.5rem;min-width:140px;">
+                <div style="font-size:1.6rem;margin-bottom:0.5rem;">⚡</div>
+                <div style="color:#a5b4fc;font-weight:600;font-size:0.85rem;">Gemini 2.0 Flash</div>
+                <div style="color:#374151;font-size:0.75rem;margin-top:0.25rem;">Fast, powerful responses</div>
             </div>
-            <div style="
-                background:#0f1220; border:1px solid #1e2540;
-                border-radius:16px; padding:1.25rem 1.5rem; min-width:148px;
-            ">
-                <div style="font-size:1.6rem; margin-bottom:0.5rem;">🗄️</div>
-                <div style="color:#a5b4fc; font-weight:600; font-size:0.85rem;">MySQL Backed</div>
-                <div style="color:#374151; font-size:0.75rem; margin-top:0.25rem; line-height:1.4;">
-                    Persistent<br>storage
-                </div>
+            <div style="background:#0f1220;border:1px solid #1e2540;border-radius:16px;padding:1.25rem 1.5rem;min-width:140px;">
+                <div style="font-size:1.6rem;margin-bottom:0.5rem;">🗄️</div>
+                <div style="color:#a5b4fc;font-weight:600;font-size:0.85rem;">MySQL Backed</div>
+                <div style="color:#374151;font-size:0.75rem;margin-top:0.25rem;">Persistent storage</div>
             </div>
         </div>
 
-        <div style="
-            color:#2a3050; font-size:0.82rem;
-            display:flex; align-items:center; gap:0.4rem;
-        ">
-            <span style="font-size:1rem;">←</span>
-            Create a thread from the sidebar to begin
-        </div>
+        <div style="color:#2a3050;font-size:0.82rem;">← Create a thread from the sidebar to begin</div>
     </div>
-
-    <style>
-    @keyframes glow {
-        0%,100% { box-shadow: 0 0 0 12px rgba(102,126,234,0.08),
-                               0 0 0 24px rgba(102,126,234,0.04),
-                               0 12px 40px rgba(102,126,234,0.5); }
-        50%      { box-shadow: 0 0 0 16px rgba(102,126,234,0.12),
-                               0 0 0 32px rgba(102,126,234,0.06),
-                               0 12px 60px rgba(102,126,234,0.7); }
-    }
-    @keyframes fadeIn {
-        from { opacity:0; transform: translateY(16px); }
-        to   { opacity:1; transform: translateY(0); }
-    }
-    </style>
     """, unsafe_allow_html=True)
 
 else:
