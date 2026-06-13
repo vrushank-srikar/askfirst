@@ -560,7 +560,7 @@ else:
                         unsafe_allow_html=True,
                     )
             else:
-                with st.chat_message("assistant", avatar="✦"):
+                with st.chat_message("assistant", avatar="✨"):
                     st.markdown(msg["content"])
 
     # ── Chat Input ──
@@ -578,7 +578,7 @@ else:
             )
 
         # Stream-style placeholder while waiting
-        with st.chat_message("assistant", avatar="✦"):
+        with st.chat_message("assistant", avatar="✨"):
             with st.spinner(""):
                 result = send_chat(st.session_state.active_thread_id, text)
 
