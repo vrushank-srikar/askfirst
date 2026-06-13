@@ -13,10 +13,11 @@ from datetime import datetime
 from sqlalchemy import (
     create_engine, Column, Integer, String, Text, DateTime, ForeignKey
 )
+from pathlib import Path
 from sqlalchemy.orm import declarative_base, sessionmaker, relationship
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env")
 
 # ─── Config ──────────────────────────────────────────────────────────────────
 MYSQL_HOST     = os.getenv("MYSQL_HOST", "localhost")

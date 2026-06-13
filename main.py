@@ -12,6 +12,7 @@ Uses: google-genai SDK (google.genai)
 """
 
 import os
+from pathlib import Path
 from contextlib import asynccontextmanager
 from typing import Optional
 
@@ -34,7 +35,7 @@ from database import (
     get_all_messages_for_memory,
 )
 
-load_dotenv()
+load_dotenv(dotenv_path=Path(__file__).resolve().parent / ".env")
 
 # ─── Gemini Setup ────────────────────────────────────────────────────────────
 
