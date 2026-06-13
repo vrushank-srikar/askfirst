@@ -214,16 +214,19 @@ def init_state():
 init_state()
 
 
-# ─── API Helpers ─────────────────────────────────────────────────────────────
 def api(method: str, path: str, **kwargs):
     """Thin wrapper around requests — returns (ok, data)."""
     try:
         r = getattr(requests, method)(f"{API_BASE}{path}", timeout=90, **kwargs)
-        return r.ok, r.json() if r.ok else {}
+        try:
+            data = r.json()
+        except Exception:
+            data = {"detail": r.text or "Unknown error"}
+        return r.ok, data
     except requests.exceptions.ConnectionError:
-        return False, {}
-    except Exception:
-        return False, {}
+        return False, {"detail": "Connection error — could not reach backend."}
+    except Exception as e:
+        return False, {"detail": str(e)}
 
 
 def fetch_threads() -> list:
@@ -241,9 +244,8 @@ def create_thread(title: str | None = None) -> dict | None:
     return data if ok else None
 
 
-def send_chat(tid: int, message: str) -> dict | None:
-    ok, data = api("post", f"/threads/{tid}/chat", json={"message": message})
-    return data if ok else None
+def send_chat(tid: int, message: str) -> tuple[bool, dict]:
+    return api("post", f"/threads/{tid}/chat", json={"message": message})
 
 
 def delete_thread(tid: int) -> bool:
@@ -580,14 +582,15 @@ else:
         # Stream-style placeholder while waiting
         with st.chat_message("assistant", avatar="✨"):
             with st.spinner(""):
-                result = send_chat(st.session_state.active_thread_id, text)
+                ok, result = send_chat(st.session_state.active_thread_id, text)
 
-            if result and result.get("reply"):
+            if ok and result.get("reply"):
                 reply = result["reply"]
                 st.markdown(reply)
                 st.session_state.messages.append({"role": "assistant", "content": reply})
             else:
+                err_msg = result.get("detail", "Unknown backend error")
                 st.error(
-                    "⚠️ No response received. "
-                    "Make sure the FastAPI backend is running on port 8000."
+                    f"⚠️ **Error sending message:** {err_msg}\n\n"
+                    f"*(Target URL: `{API_BASE}`)*"
                 )
